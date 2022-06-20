@@ -1,0 +1,23 @@
+{% extends "core/base.html" %} {% load static %} {% block content %}
+
+    <div class="center-div">
+        <p class="text-bold-white center">GET YOUR FREE PASS FOR</p>
+        <p class="text-bold-white center">BOSTON FIESTA 2022</p>
+
+        <form class="form" method="POST">
+            {% csrf_token %}
+            <div class="input-container">
+                <i class="fa fa-user icon"></i>
+                <input class="input-field" type="text" placeholder="Full Name" name="full_name" required/>
+            </div>
+            
+            <div class="input-container">
+                <i class="fa fa-envelope icon"></i>
+                <input class="input-field" type="email" placeholder="College Email Id" name="email" required/>
+            </div>
+            
+            <button type="submit" class="btn">Find My Ticket <i class="fa fa-arrow-right" style="margin-left: 10px"></i></button>
+        </form>
+    </div>
+    
+{% endblock content %}

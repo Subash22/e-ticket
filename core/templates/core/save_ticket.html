@@ -1,0 +1,22 @@
+{% extends "core/base.html" %} {% load static %} {% block content %}
+
+    <p class="text-bold-black center white-bg">Save your ticket</p>
+    <div class="center-div">
+
+        <form action="#" class="form">
+            <div class="blank-container-white">
+                <div id="ticket" class="{% if name == '' %}display-none{% endif %}">
+                    Ticket for Boston Festa<br/>
+                    {{name}}
+                    {{email}}
+                    <span>{{ svg|safe }}</span>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Download Ticket <i class="fa fa-arrow-down" style="margin-left: 10px"></i></button>
+        </form>
+        
+        <p class="text-gray center">Note: Tickets is compulsory at event venue.</p>
+    </div>
+    
+{% endblock content %}
