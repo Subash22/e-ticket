@@ -51,8 +51,8 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    f_name = models.CharField(blank=True, null=True, max_length=100)
-    l_name = models.CharField(blank=True, null=True, max_length=100)
+    first_name = models.CharField(blank=True, null=True, max_length=100)
+    last_name = models.CharField(blank=True, null=True, max_length=100)
     username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     is_verified = models.BooleanField(default=False)
@@ -81,31 +81,28 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Student(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     student = models.ForeignKey(BostonStudent, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
     program = models.CharField(max_length=100)
     semester = models.CharField(max_length=100)
     shift = models.CharField(max_length=100)
-    password = models.CharField(max_length=255)
     image = models.ImageField(upload_to="students/")
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.user.first_name} {self.user.last_name}"
 
     class Meta:
         verbose_name_plural = "Students"
 
     def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.user.first_name} {self.user.last_name}"
         
     def student_email(self):
-        return self.student.email
+        return self.user.email
     
     def image_tag(self):
         if self.image != '':
-            return mark_safe('<img src="%s%s" width="150" height="150" />' % (f'{settings.MEDIA_URL}', self.image))
+            return mark_safe('<img src="%s%s" width="50" height="50" />' % (f'{settings.MEDIA_URL}', self.image))
 
 
 class Ticket(models.Model):

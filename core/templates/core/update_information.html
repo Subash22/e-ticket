@@ -3,23 +3,26 @@
     <p class="text-bold-black center white-bg"><i class="fa fa-arrow-right" style="margin-right: 15px"></i> Update your information</p>
     <div class="center-div">
 
-        <form class="form-inline" method="POST" enctype="multipart/form-data">
+        <form class="form-inline" autocomplete="off" action="/update-information" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="text" placeholder="First Name" name="first_name" required/>
-        
-            <input type="text" placeholder="Last Name" name="last_name" required/>
+            <input type="hidden" name="full_name" value="{{name}}"/>
+            <input type="hidden" name="email" value="{{email}}"/>
 
-            <input type="text" placeholder="Program" name="program" required/>
+            <input type="text" autocomplete="off" placeholder="First Name" name="first_name" required/>
+        
+            <input type="text" autocomplete="off" placeholder="Last Name" name="last_name" required/>
+
+            <input type="text" autocomplete="off" placeholder="Program" name="program" required/>
             
-            <input type="text" placeholder="Semester" name="semester" required/>
+            <input type="text" autocomplete="off" placeholder="Semester" name="semester" required/>
 
-            <input type="text" placeholder="Shift" name="shift" required/>
+            <input type="text" autocomplete="off" placeholder="Shift" name="shift" required/>
         
-            <input type="email" placeholder="Email Id" name="email" required/>
+            <input type="password" autocomplete="new-password" placeholder="Enter new password" name="password" required/>
 
             <input type="file" name="image" accept="image/png, image/jpg, image/jpeg" required/>
 
-            <button type="submit" class="btn">Generate My Ticket <i class="fa fa-arrow-right" style="margin-left: 10px"></i></button>
+            <button type="submit" class="btn">Update information <i class="fa fa-arrow-right" style="margin-left: 10px"></i></button>
         </form>
         
     </div>

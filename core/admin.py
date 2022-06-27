@@ -20,8 +20,8 @@ class StudentAdmin(admin.ModelAdmin):
         'shift',
         'student_email'
     ]
-    list_filter = ['first_name', 'last_name', 'program', 'semester', 'shift']
-    search_fields = ['first_name', 'last_name']
+    list_filter = ['program', 'semester', 'shift']
+    search_fields = ['full_name', 'program']
 
 
 class TicketAdmin(admin.ModelAdmin):

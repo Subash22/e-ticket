@@ -195,7 +195,7 @@ a{
     align-items: center;
   }
   
-  .form-inline input[type=text], .form-inline input[type=email] {
+  .form-inline input[type=text], .form-inline input[type=email], .form-inline input[type=password] {
     padding: 15px;
     outline: none;
     width: 50%;
@@ -222,7 +222,7 @@ a{
   }
   
   @media (max-width: 1000px) {
-    .form-inline input[type=text], .form-inline input[type=email] {
+    .form-inline input[type=text], .form-inline input[type=email], .form-inline input[type=password] {
         width: 100%;
         border: 1px solid #ddd;
     }

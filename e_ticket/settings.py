@@ -140,14 +140,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'user-login'
-LOGOUT_REDIRECT_URL = 'user-login'
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'login'
 
 # Django Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.bostonfesta.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'ticket@bostonfesta.com'
-EMAIL_HOST_PASSWORD = 'Bostonfesta$.com'
+EMAIL_HOST_USER = 'subashkhatiwada333@gmail.com'
+EMAIL_HOST_PASSWORD = 'ejlffqxkpqbleyyw'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
