@@ -16,6 +16,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
+from django.db import transaction
+
 
 UserModel = get_user_model()
 
@@ -37,6 +39,9 @@ class HomeView(View):
 
             boston_student = BostonStudent.objects.filter(full_name=full_name, email=email).first()
             if boston_student:
+                if UserModel.objects.filter(username=email).first():
+                    messages.error(self.request, "Ticket already generated with this email.")
+                    return redirect("home")
                 context = {
                     'title': "Generate Ticket for Boston Festa",
                     'name': full_name,
@@ -105,47 +110,18 @@ class UpdateInformationView(View):
             email = self.request.POST['email']
             boston_student = BostonStudent.objects.filter(full_name=full_name, email=email).first()
             if boston_student:
-                first_name = self.request.POST['first_name']
-                last_name = self.request.POST['last_name']
-                semester = self.request.POST['semester']
-                shift = self.request.POST['shift']
-                program = self.request.POST['program']
-                raw_password = self.request.POST['password']
-                image = self.request.FILES['image']
+                if UserModel.objects.filter(username=email).first():
+                    messages.error(self.request, "Ticket already generated with this email.")
+                    return redirect("home")
 
-                user = UserModel.objects.create_user(email, email, raw_password)
-                # user = UserModel.objects.get(username=email)
-                user.first_name = first_name
-                user.last_name = last_name
-                user.email = email
-                user.is_active = False
-                user.save()
-
-                student = Student()
-                student.student = boston_student
-                student.user = user
-                student.program = program
-                student.semester = semester
-                student.shift = shift
-                student.image = image
-                student.save()
-
-                current_site = get_current_site(self.request)
-                subject = "Verify your email - Boston Festa"
-                email_template_name = "core/verify_email.txt"
-                c = {
-                    "email": user.email,
-                    'domain': current_site,
-                    'site_name': 'Interface',
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "full_name": student.full_name,
-                    'token': default_token_generator.make_token(user),
-                    'protocol': 'http',
-                }
-                email = render_to_string(email_template_name, c)
                 try:
-                    email = send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)                
+                    with transaction.atomic():
+                        # open an atomic transaction, i.e. all successful or none
+                        user = create_user_db(self.request)
+                        student = create_student_db(self.request, user, boston_student)
+                        send_verification_link(self.request, user, student)
                 except:
+                    messages.error(self.request, "Something went wrong.")
                     return redirect("home")
 
                 context = {
@@ -159,6 +135,55 @@ class UpdateInformationView(View):
             messages.error(self.request, "Something went wrong.")
             return redirect("home")
 
+
+def create_user_db(request):
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    email = request.POST['email']
+    raw_password = request.POST['password']
+
+    user = UserModel.objects.create_user(email, email, raw_password)
+    # user = UserModel.objects.get(username=email)
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    user.is_active = False
+    user.save()
+    return user
+
+
+def create_student_db(request, user, boston_student):
+    semester = request.POST['semester']
+    shift = request.POST['shift']
+    program = request.POST['program']
+    image = request.FILES['image']
+
+    student = Student()
+    student.student = boston_student
+    student.user = user
+    student.program = program
+    student.semester = semester
+    student.shift = shift
+    student.image = image
+    student.save()
+    return student
+
+
+def send_verification_link(request, user, student):
+    current_site = get_current_site(request)
+    subject = "Verify your email - Boston Festa"
+    email_template_name = "core/verify_email.txt"
+    c = {
+        "email": user.email,
+        'domain': current_site,
+        'site_name': 'Interface',
+        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+        "full_name": student.full_name,
+        'token': default_token_generator.make_token(user),
+        'protocol': 'http',
+    }
+    email = render_to_string(email_template_name, c)
+    send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
 
 class GenerateTicketView(View):
