@@ -46,8 +46,7 @@ class HomeView(View):
 
             messages.error(self.request, "Full-name or email didn't match.")
             return redirect("home")
-        except Exception as e:
-            print(e)
+        except:
             messages.error(self.request, "Something went wrong.")
             return redirect("home")
 
@@ -66,17 +65,14 @@ class LoginView(View):
         try:
             email = self.request.POST['email']
             password = self.request.POST['password']
-            print(email, password)
             user = authenticate(self.request, username=email, password=password)
-            print(user)
             if user is not None:
                 login(self.request, user)
             else:
                 messages.error(self.request, "Username and password didn't match.")
                 return redirect("login")
             return redirect("generate_ticket")
-        except Exception as e:
-            print(e)
+        except:
             messages.error(self.request, "Something went wrong.")
             return redirect("login")
 
@@ -142,15 +138,14 @@ class UpdateInformationView(View):
                     'domain': current_site,
                     'site_name': 'Interface',
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "user": user,
+                    "full_name": student.full_name,
                     'token': default_token_generator.make_token(user),
                     'protocol': 'http',
                 }
                 email = render_to_string(email_template_name, c)
                 try:
                     email = send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)                
-                except Exception as e:
-                    print(e)
+                except:
                     return redirect("home")
 
                 context = {
@@ -160,8 +155,7 @@ class UpdateInformationView(View):
             else:
                 messages.error(self.request, "Full-name or email didn't match.")
                 return redirect("home")
-        except Exception as e:
-            print(e)
+        except:
             messages.error(self.request, "Something went wrong.")
             return redirect("home")
 
@@ -172,7 +166,6 @@ class GenerateTicketView(View):
     def get(self, *args, **kwargs):
         try:
             if self.request.user.is_authenticated:
-                print(self.request.user)
                 ticket = Ticket.objects.filter(student__user=self.request.user).first()
                 if ticket:
                     context = {
@@ -227,14 +220,13 @@ class GenerateTicketView(View):
 def check_validation_view(request, ticket_id):
     if request.method == "GET":
         try:
-            ticket = Ticket.objects.filter(ticket_id=ticket_id)
-            if not ticket.exists():
-                return JsonResponse({'message': 'invalid'})
-            ticket = ticket.first()
-            context = {
-                'message': 'valid',
-                'name': ticket.student.first_name + ' ' + ticket.student.last_name,
-            }
-            return JsonResponse(context)
+            ticket = Ticket.objects.filter(ticket_id=ticket_id).first()
+            if ticket:
+                context = {
+                    'message': 'valid',
+                    'name': ticket.student.student.full_name,
+                }
+                return JsonResponse(context)
+            return JsonResponse({'message': 'invalid'}, status=404)
         except:
-            return JsonResponse({'message': 'Somethong went wrong.'})
+            return JsonResponse({'message': 'Something went wrong.'}, status=400)
