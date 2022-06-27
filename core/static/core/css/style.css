@@ -4,6 +4,11 @@
     padding: 0;
 }
 
+a{
+    color: inherit;
+    text-decoration: none;
+}
+
 .body-bg{
     background-color: rgb(12,20,39) !important;
     font-family: 'Roboto', sans-serif;
@@ -55,6 +60,13 @@
     margin-bottom: 15px;
 }
 
+.text-white{
+    color: #e1e1e1;
+    font-size: 22px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 .form{
     margin: 50px auto 20px auto;
 }
@@ -82,7 +94,7 @@
     padding: 15px;
     outline: none;
     font-size: 16px;
-    margin-right: 10px;
+    border-radius: 0 10px 10px 0;
 }
 
 .input-field:focus {
@@ -93,14 +105,15 @@
 .btn {
     background-color: #14AE5C;
     color: white;
-    padding: 18px 20px;
+    padding: 16px;
     border: none;
     cursor: pointer;
     width: 100%;
     opacity: 0.9;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .btn:hover {
@@ -138,15 +151,13 @@
 /* If the screen size is 600px or less, set the font-size of <div> to 30px */
 @media only screen and (max-width: 600px) {
     .center-div{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+        position: static;
+        transform: translate(0%, 0%);
+        margin: 40px 40px 0 40px;
     }
 
     .text-bold-white {
-        font-size: 22px;
+        font-size: 24px;
     }
 }
 
@@ -175,4 +186,44 @@
   
   .closebtn:hover {
     color: black;
+  }
+
+
+  .form-inline {  
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+  }
+  
+  .form-inline input[type=text], .form-inline input[type=email] {
+    padding: 15px;
+    outline: none;
+    width: 50%;
+    font-size: 16px;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    margin: 8px 0;
+  }
+
+  .form-inline input[type=file] {
+    padding: 16px;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    vertical-align: middle;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    color: #fff;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 1000px) {
+    .form-inline input[type=text], .form-inline input[type=email] {
+        width: 100%;
+        border: 1px solid #ddd;
+    }
   }

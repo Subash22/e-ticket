@@ -3,24 +3,22 @@
     <p class="text-bold-black center white-bg"><i class="fa fa-arrow-right" style="margin-right: 15px"></i> Update your information</p>
     <div class="center-div">
 
-        <form class="form" method="POST">
+        <form class="form-inline" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="input-container">
-                <input class="input-field" type="text" placeholder="First Name" name="first_name" required/>
-            
-                <input class="input-field" type="text" placeholder="Last Name" name="last_name" required/>
-            
-                <input class="input-field" type="text" placeholder="Program" name="program" required/>
-            </div>
+            <input type="text" placeholder="First Name" name="first_name" required/>
+        
+            <input type="text" placeholder="Last Name" name="last_name" required/>
 
-            <div class="input-container">
-                <input class="input-field" type="text" placeholder="Semester" name="semester" required/>
+            <input type="text" placeholder="Program" name="program" required/>
             
-                <input class="input-field" type="text" placeholder="Shift" name="shift" required/>
-            
-                <input class="input-field" type="email" placeholder="Email Id" name="email" required/>
-            </div>
-            
+            <input type="text" placeholder="Semester" name="semester" required/>
+
+            <input type="text" placeholder="Shift" name="shift" required/>
+        
+            <input type="email" placeholder="Email Id" name="email" required/>
+
+            <input type="file" name="image" accept="image/png, image/jpg, image/jpeg" required/>
+
             <button type="submit" class="btn">Generate My Ticket <i class="fa fa-arrow-right" style="margin-left: 10px"></i></button>
         </form>
         

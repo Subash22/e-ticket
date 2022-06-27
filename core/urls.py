@@ -3,6 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
+    path('login', LoginView.as_view(), name='login'),
     path('generate-ticket', GenerateTicketView.as_view(), name='generate_ticket'),
 
     path('check-validation/<str:ticket_id>', check_validation_view, name='check_validation')
