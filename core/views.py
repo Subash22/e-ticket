@@ -37,7 +37,7 @@ class HomeView(View):
             full_name = self.request.POST['full_name']
             email = self.request.POST['email']
 
-            boston_student = BostonStudent.objects.filter(full_name=full_name, email=email).first()
+            boston_student = BostonStudent.objects.filter(full_name__iexact=full_name, email=email).first()
             if boston_student:
                 if UserModel.objects.filter(username=email).first():
                     messages.error(self.request, "Ticket already generated with this email.")
@@ -70,11 +70,20 @@ class LoginView(View):
         try:
             email = self.request.POST['email']
             password = self.request.POST['password']
-            user = authenticate(self.request, username=email, password=password)
-            if user is not None:
-                login(self.request, user)
+            user = UserModel.objects.filter(username=email).first()
+            if user:
+                if user.is_verified == True:
+                    user = authenticate(self.request, username=email, password=password)
+                    if user is not None:
+                        login(self.request, user)
+                    else:
+                        messages.error(self.request, "Username and password didn't match.")
+                        return redirect("login")
+                else:
+                    messages.error(self.request, "Please activate your account before login.")
+                    return redirect("login")
             else:
-                messages.error(self.request, "Username and password didn't match.")
+                messages.error(self.request, "Username doesn't exists.")
                 return redirect("login")
             return redirect("generate_ticket")
         except:
@@ -108,11 +117,11 @@ class UpdateInformationView(View):
         try:
             full_name = self.request.POST['full_name']
             email = self.request.POST['email']
-            boston_student = BostonStudent.objects.filter(full_name=full_name, email=email).first()
+            boston_student = BostonStudent.objects.filter(full_name__iexact=full_name, email=email).first()
             if boston_student:
                 if UserModel.objects.filter(username=email).first():
-                    messages.error(self.request, "Ticket already generated with this email.")
-                    return redirect("home")
+                    messages.error(self.request, "Ticket already generated with this email. Login to continue.")
+                    return redirect("login")
 
                 try:
                     with transaction.atomic():

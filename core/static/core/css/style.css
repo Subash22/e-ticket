@@ -67,6 +67,18 @@ a{
     margin-bottom: 15px;
 }
 
+.text-white-sm{
+    color: #c1c1c1;
+    font-size: 18px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+.a-link{
+    color: #f1f1f1;
+    font-size: 22px;
+}
+
 .form{
     margin: 50px auto 20px auto;
 }
