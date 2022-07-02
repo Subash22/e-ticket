@@ -8,17 +8,52 @@
             <input type="hidden" name="full_name" value="{{name}}"/>
             <input type="hidden" name="email" value="{{email}}"/>
 
-            <input type="text" autocomplete="off" placeholder="First Name" name="first_name" required/>
-        
-            <input type="text" autocomplete="off" placeholder="Last Name" name="last_name" required/>
-
-            <input type="text" autocomplete="off" placeholder="Program" name="program" required/>
+            <div class="form-single">
+                <label for="first_name" class="text-white-sm">First Name:</label>
+                <input type="text" autocomplete="off" placeholder="First Name" name="first_name" required/>
+            </div>
             
-            <input type="text" autocomplete="off" placeholder="Semester" name="semester" required/>
+            <div class="form-single">
+                <label for="last_name" class="text-white-sm">Last Name:</label>
+                <input type="text" autocomplete="off" placeholder="Last Name" name="last_name" required/>
+            </div>
+            
+            <div class="form-single">
+                <label for="program" class="text-white-sm">Program:</label>
+                <select name="program">
+                    <option value="bcis">BCIS</option>
+                    <option value="bba">BBA</option>
+                    <option value="bba-bi">BBA-BI</option>
+                    <option value="mba">MBA</option>
+                </select>
+            </div>
+            
+            <div class="form-single">
+                <label for="semester" class="text-white-sm">Semester:</label>
+                <select name="semester">
+                    <option value="1">First Semester</option>
+                    <option value="2">Second Semester</option>
+                    <option value="3">Third Semester</option>
+                    <option value="4">Fourth Semester</option>
+                    <option value="5">Fifth Semester</option>
+                    <option value="6">Sixth Semester</option>
+                    <option value="7">Seventh Semester</option>
+                    <option value="8">Eighth Semester</option>
+                </select>
+            </div>
+            
+            <div class="form-single">
+                <label for="shift" class="text-white-sm">Shift:</label>
+                <select name="shift">
+                    <option value="morning">Morning</option>
+                    <option value="day">Day</option>
+                </select>
+            </div>
 
-            <input type="text" autocomplete="off" placeholder="Shift" name="shift" required/>
-        
-            <input type="password" autocomplete="new-password" placeholder="Enter new password" name="password" required/>
+            <div class="form-single">
+                <label for="phone" class="text-white-sm">Phone No.:</label>
+                <input type="text" autocomplete="off" placeholder="Phone number" name="phone" required/>
+            </div>
 
             <input type="file" name="image" accept="image/png, image/jpg, image/jpeg" required/>
 

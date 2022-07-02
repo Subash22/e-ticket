@@ -40,8 +40,16 @@ class HomeView(View):
             boston_student = BostonStudent.objects.filter(full_name__iexact=full_name, email=email).first()
             if boston_student:
                 if UserModel.objects.filter(username=email).first():
-                    messages.error(self.request, "Ticket already generated with this email.")
-                    return redirect("home")
+                    if Ticket.objects.filter(student__user__username=email).first():
+                        messages.error(self.request, "Ticket already generated with this email.")
+                        return redirect("home")
+                    else:
+                        user = UserModel.objects.get(username=email)
+                        send_verification_link(self.request, user, Student.objects.get(user=user))
+                        context = {
+                            "title": "Verification Email Sent"
+                        }
+                        return render(self.request, "core/verification_sent.html", context)
                 context = {
                     'title': "Generate Ticket for Boston Festa",
                     'name': full_name,
@@ -99,8 +107,8 @@ def activate(request, uidb64, token):
         user = None
     if user is not None and default_token_generator.check_token(user, token):
         if user.is_verified == True:
-            messages.error(request,'Email already confirmed. Please login to your account.')
-            return redirect('login')
+            messages.error(request,'Email already activated. Check your email for your ticket.')
+            return redirect('home')
         user.is_active = True
         user.is_verified = True
         user.save()
@@ -114,7 +122,7 @@ def activate(request, uidb64, token):
                     messages.error(request, "Username and password didn't match.")
                     return redirect("home")
             else:
-                messages.error(request, "Please activate your account before login.")
+                messages.error(request, "Please activate your account.")
                 return redirect("home")
         # messages.success(request,'Email confirmed. Now you can login your account.')
         return redirect('generate_ticket')
@@ -132,9 +140,17 @@ class UpdateInformationView(View):
             boston_student = BostonStudent.objects.filter(full_name__iexact=full_name, email=email).first()
             if boston_student:
                 if UserModel.objects.filter(username=email).first():
-                    messages.error(self.request, "Ticket already generated with this email. Login to continue.")
-                    return redirect("login")
-
+                    if Ticket.objects.filter(student__user__username=email).first():
+                        messages.error(self.request, "Ticket already generated with this email.")
+                        return redirect("home")
+                    else:
+                        user = UserModel.objects.get(username=email)
+                        send_verification_link(self.request, user, Student.objects.get(user=user))
+                        context = {
+                            "title": "Verification Email Sent"
+                        }
+                        return render(self.request, "core/verification_sent.html", context)
+                
                 try:
                     with transaction.atomic():
                         # open an atomic transaction, i.e. all successful or none
