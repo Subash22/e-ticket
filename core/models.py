@@ -84,6 +84,7 @@ class Student(models.Model):
     program = models.CharField(max_length=100)
     semester = models.CharField(max_length=100)
     shift = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
     image = models.ImageField(upload_to="students/")
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)

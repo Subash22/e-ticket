@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
     url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
     path('', HomeView.as_view(), name='home'),
-    path('login', LoginView.as_view(), name='login'),
+    # path('login', LoginView.as_view(), name='login'),
     path('update-information', UpdateInformationView.as_view(), name='update_information'),
     path('generate-ticket', GenerateTicketView.as_view(), name='generate_ticket'),
     

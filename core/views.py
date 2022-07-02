@@ -56,39 +56,39 @@ class HomeView(View):
             return redirect("home")
 
             
-class LoginView(View):
-    def get(self, *args, **kwargs):
-        try:
-            context = {
-                'title': "Boston Festa",
-            }
-            return render(self.request, "core/login.html", context)
-        except:
-            return redirect("home")
+# class LoginView(View):
+#     def get(self, *args, **kwargs):
+#         try:
+#             context = {
+#                 'title': "Boston Festa",
+#             }
+#             return render(self.request, "core/login.html", context)
+#         except:
+#             return redirect("home")
 
-    def post(self, *args, **kwargs):
-        try:
-            email = self.request.POST['email']
-            password = self.request.POST['password']
-            user = UserModel.objects.filter(username=email).first()
-            if user:
-                if user.is_verified == True:
-                    user = authenticate(self.request, username=email, password=password)
-                    if user is not None:
-                        login(self.request, user)
-                    else:
-                        messages.error(self.request, "Username and password didn't match.")
-                        return redirect("login")
-                else:
-                    messages.error(self.request, "Please activate your account before login.")
-                    return redirect("login")
-            else:
-                messages.error(self.request, "Username doesn't exists.")
-                return redirect("login")
-            return redirect("generate_ticket")
-        except:
-            messages.error(self.request, "Something went wrong.")
-            return redirect("login")
+#     def post(self, *args, **kwargs):
+#         try:
+#             email = self.request.POST['email']
+#             password = self.request.POST['password']
+#             user = UserModel.objects.filter(username=email).first()
+#             if user:
+#                 if user.is_verified == True:
+#                     user = authenticate(self.request, username=email, password=password)
+#                     if user is not None:
+#                         login(self.request, user)
+#                     else:
+#                         messages.error(self.request, "Username and password didn't match.")
+#                         return redirect("login")
+#                 else:
+#                     messages.error(self.request, "Please activate your account before login.")
+#                     return redirect("login")
+#             else:
+#                 messages.error(self.request, "Username doesn't exists.")
+#                 return redirect("login")
+#             return redirect("generate_ticket")
+#         except:
+#             messages.error(self.request, "Something went wrong.")
+#             return redirect("login")
 
 
 def activate(request, uidb64, token):
@@ -104,11 +104,23 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.is_verified = True
         user.save()
-        messages.success(request,'Email confirmed. Now you can login your account.')
-        return redirect('login')
+        user = UserModel.objects.filter(username=user.username).first()
+        if user:
+            if user.is_verified == True:
+                user = authenticate(request, username=user.username, password=user.username)
+                if user is not None:
+                    login(request, user)
+                else:
+                    messages.error(request, "Username and password didn't match.")
+                    return redirect("home")
+            else:
+                messages.error(request, "Please activate your account before login.")
+                return redirect("home")
+        # messages.success(request,'Email confirmed. Now you can login your account.')
+        return redirect('generate_ticket')
     else:
         messages.error(request,'Invalid or expired link.')
-        return redirect('login')
+        return redirect('home')
 
 
 class UpdateInformationView(View):
@@ -149,9 +161,8 @@ def create_user_db(request):
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
     email = request.POST['email']
-    raw_password = request.POST['password']
 
-    user = UserModel.objects.create_user(email, email, raw_password)
+    user = UserModel.objects.create_user(email, email, email)
     # user = UserModel.objects.get(username=email)
     user.first_name = first_name
     user.last_name = last_name
@@ -165,6 +176,7 @@ def create_student_db(request, user, boston_student):
     semester = request.POST['semester']
     shift = request.POST['shift']
     program = request.POST['program']
+    phone = request.POST['phone']
     image = request.FILES['image']
 
     student = Student()
@@ -173,6 +185,7 @@ def create_student_db(request, user, boston_student):
     student.program = program
     student.semester = semester
     student.shift = shift
+    student.phone = phone
     student.image = image
     student.save()
     return student

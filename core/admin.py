@@ -18,6 +18,7 @@ class StudentAdmin(admin.ModelAdmin):
         'program',
         'semester',
         'shift',
+        'phone',
         'student_email'
     ]
     list_filter = ['program', 'semester', 'shift']
