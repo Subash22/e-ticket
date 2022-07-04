@@ -24,6 +24,26 @@ a {
   transform: translate(-50%, -50%);
 }
 
+.center-div-flex {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+}
+
+.index-center-div {
+  margin-top: 10%;
+}
+
+.border-box{
+  background-color: #0d773e;
+  margin-right: 20px;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
 .center {
   text-align: center;
 }
@@ -145,13 +165,34 @@ a {
 }
 
 /* If the screen size is 601px or more, set the font-size of <div> to 80px */
+@media only screen and (max-height: 700px) {
+  .center-div {
+    position: static;
+    transform: translate(0%, 0%);
+    margin: 40px 40px 0 40px;
+  }
+}
+
+@media only screen and (max-height: 770px) {
+  .index-center-div {
+    margin-top: 20px;
+  }
+}
+
+@media only screen and (max-height: 700px) and (max-width: 600px) {
+  .center-div-flex {
+    position: static;
+    transform: translate(0%, 0%);
+    margin: 40px 40px 0 40px;
+  }
+}
+
+/* If the screen size is 601px or more, set the font-size of <div> to 80px */
 @media only screen and (max-width: 900px) {
   .center-div {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    position: static;
+    transform: translate(0%, 0%);
+    margin: 40px 40px 0 40px;
   }
 
   .text-bold-white {
@@ -169,6 +210,16 @@ a {
 
   .text-bold-white {
     font-size: 24px;
+  }
+
+  .center-div-flex {
+    display: block;
+  }
+
+  .border-box{
+    margin-right: 0px;
+    margin-bottom: 20px;
+    padding: 1rem;
   }
 }
 
@@ -249,11 +300,16 @@ a {
   width: 50%;
 }
 
+.form-double {
+  display: block !important;
+  width: 100%;
+}
+
 @media (max-width: 1000px) {
   .form-inline input[type="text"],
   .form-inline input[type="email"],
   .form-inline input[type="password"] {
     width: 100%;
-    border: 1px solid #ddd;
+    border-right: 2px solid rgb(12, 20, 39);
   }
 }

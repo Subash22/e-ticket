@@ -25,6 +25,19 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['full_name', 'program']
 
 
+class OutsideStudentAdmin(admin.ModelAdmin):
+    list_display = [
+        'image_tag',
+        'full_name',
+        'phone',
+        'study',
+        'college',
+        'student_email'
+    ]
+    list_filter = ['phone', 'study', 'college']
+    search_fields = ['phone', 'study', 'college']
+
+
 class TicketAdmin(admin.ModelAdmin):
     list_display = [
         'ticket_id',
@@ -49,5 +62,6 @@ class CustomUserAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(BostonStudent, BostonStudentAdmin)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(OutsideStudent, OutsideStudentAdmin)
 admin.site.register(Ticket, TicketAdmin)
 

@@ -32,6 +32,17 @@ class HomeView(View):
         except:
             return redirect("home")
 
+
+class BostonLoginView(View):
+    def get(self, *args, **kwargs):
+        try:
+            context = {
+                'title': "Boston Festa",
+            }
+            return render(self.request, "core/login.html", context)
+        except:
+            return redirect("boston")
+
     def post(self, *args, **kwargs):
         try:
             full_name = self.request.POST['full_name']
@@ -42,7 +53,7 @@ class HomeView(View):
                 if UserModel.objects.filter(username=email).first():
                     if Ticket.objects.filter(student__user__username=email).first():
                         messages.error(self.request, "Ticket already generated with this email.")
-                        return redirect("home")
+                        return redirect("boston")
                     else:
                         user = UserModel.objects.get(username=email)
                         send_verification_link(self.request, user, Student.objects.get(user=user))
@@ -58,10 +69,10 @@ class HomeView(View):
                 return render(self.request, "core/update_information.html", context)
 
             messages.error(self.request, "Full-name or email didn't match.")
-            return redirect("home")
+            return redirect("boston")
         except:
             messages.error(self.request, "Something went wrong.")
-            return redirect("home")
+            return redirect("boston")
 
             
 # class LoginView(View):
@@ -97,6 +108,67 @@ class HomeView(View):
 #         except:
 #             messages.error(self.request, "Something went wrong.")
 #             return redirect("login")
+
+class UploadInformationView(View):
+
+    def get(self, *args, **kwargs):
+        try:
+            context = {
+                'title': "Boston Festa",
+            }
+            return render(self.request, "core/outside_information.html", context)
+        except:
+            return redirect("upload_information")
+
+    def post(self, *args, **kwargs):
+        try:
+            email = self.request.POST['email']
+            if UserModel.objects.filter(username=email).first():
+                if Ticket.objects.filter(student__user__username=email).first():
+                    messages.error(self.request, "Ticket already generated with this email.")
+                    return redirect("upload_information")
+                else:
+                    user = UserModel.objects.get(username=email)
+                    send_verification_link(self.request, user, Student.objects.get(user=user))
+                    context = {
+                        "title": "Verification Email Sent"
+                    }
+                    return render(self.request, "core/verification_sent.html", context)
+            
+            try:
+                with transaction.atomic():
+                    # open an atomic transaction, i.e. all successful or none
+                    user = create_user_db(self.request)
+                    student = create_outside_student_db(self.request, user)
+                    send_verification_link(self.request, user, student)
+            except Exception as e:
+                print(e)
+                messages.error(self.request, "Something went wrong.")
+                return redirect("upload_information")
+
+            context = {
+                "title": "Verification Email Sent"
+            }
+            return render(self.request, "core/verification_sent.html", context)
+        except:
+            messages.error(self.request, "Something went wrong.")
+            return redirect("upload_information")
+
+
+def create_outside_student_db(request, user):
+    phone = request.POST['phone']
+    study = request.POST['higher_study']
+    college = request.POST['college_name']
+    image = request.FILES['image']
+
+    student = OutsideStudent()
+    student.user = user
+    student.phone = phone
+    student.study = study
+    student.college = college
+    student.image = image
+    student.save()
+    return student
 
 
 def activate(request, uidb64, token):
@@ -243,6 +315,19 @@ class GenerateTicketView(View):
                     img.save(stream)
                     context["svg"] = stream.getvalue().decode()
                     return render(self.request, "core/save_ticket.html", context)
+                elif Ticket.objects.filter(outside_student__user=self.request.user).first():
+                    context = {
+                        'name': ticket.outside_student.full_name,
+                        'email': ticket.outside_student.student_email,
+                        'created_at': ticket.created_at,
+                        'ticket_id': ticket.ticket_id
+                    }
+                    factory = qrcode.image.svg.SvgImage
+                    img = qrcode.make(ticket.ticket_id, image_factory=factory, box_size=10)
+                    stream = BytesIO()
+                    img.save(stream)
+                    context["svg"] = stream.getvalue().decode()
+                    return render(self.request, "core/save_ticket.html", context)
                 else:
                     student = Student.objects.filter(user=self.request.user).first()
                     if student:
@@ -253,6 +338,25 @@ class GenerateTicketView(View):
                         context = {
                             'name': student.full_name,
                             'email': student.student_email,
+                            'created_at': ticket.created_at,
+                            'ticket_id': ticket.ticket_id
+                        }
+                        factory = qrcode.image.svg.SvgImage
+                        img = qrcode.make(ticket.ticket_id, image_factory=factory, box_size=10)
+                        stream = BytesIO()
+                        img.save(stream)
+                        context["svg"] = stream.getvalue().decode()
+                        return render(self.request, "core/save_ticket.html", context)
+                    elif OutsideStudent.objects.filter(user=self.request.user).first():
+                        outside_student = OutsideStudent.objects.filter(user=self.request.user).first()
+                        
+                        ticket = Ticket()
+                        ticket.outside_student = outside_student
+                        ticket.ticket_id = str(uuid.uuid4())
+                        ticket.save()
+                        context = {
+                            'name': outside_student.full_name,
+                            'email': outside_student.student_email,
                             'created_at': ticket.created_at,
                             'ticket_id': ticket.ticket_id
                         }

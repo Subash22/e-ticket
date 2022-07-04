@@ -1,0 +1,50 @@
+{% extends "core/base.html" %} {% load static %} {% block content %}
+
+    <p class="text-bold-black center white-bg"><i class="fa fa-arrow-right" style="margin-right: 15px"></i> Enter your information</p>
+    <div class="center-div">
+
+        <form class="form-inline" autocomplete="off" action="/upload-information" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-single">
+                <label for="first_name" class="text-white-sm">First Name:</label>
+                <input type="text" autocomplete="off" placeholder="First Name" name="first_name" required/>
+            </div>
+            
+            <div class="form-single">
+                <label for="last_name" class="text-white-sm">Last Name:</label>
+                <input type="text" autocomplete="off" placeholder="Last Name" name="last_name" required/>
+            </div>
+            
+            <div class="form-single">
+                <label for="email" class="text-white-sm">Email:</label>
+                <input type="text" autocomplete="off" placeholder="Email" name="email" required/>
+            </div>
+            
+            <div class="form-single">
+                <label for="phone" class="text-white-sm">Phone:</label>
+                <input type="text" autocomplete="off" placeholder="Phone Number" name="phone" required/>
+            </div>
+            
+            <div class="form-single">
+                <label for="higher_study" class="text-white-sm">Higher Study Level:</label>
+                <input type="text" autocomplete="off" placeholder="Higher Study" name="higher_study" required/>
+            </div>
+            
+            <div class="form-single">
+                <label for="college_name" class="text-white-sm">Higher Study College:</label>
+                <input type="text" autocomplete="off" placeholder="Higher Study College" name="college_name" required/>
+            </div>
+
+            <div class="form-double">
+                <label for="image" class="text-white-sm">Upload Your Image:</label>
+                <input type="file" name="image" accept="image/png, image/jpg, image/jpeg" required/>
+            </div>
+
+            <button type="submit" class="btn">Generate Ticket <i class="fa fa-arrow-right" style="margin-left: 10px"></i></button>
+        </form>
+        <p class="text-white-sm center"><a href="/"><i class="fa fa-arrow-left" style="margin-left: 10px"></i> Back to home</a></p>
+        
+    </div>
+    
+{% endblock content %}

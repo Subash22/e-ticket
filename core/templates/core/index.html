@@ -1,26 +1,22 @@
 {% extends "core/base.html" %} {% load static %} {% block content %}
 
-    <div class="center-div">
-        <p class="text-bold-white center">GET YOUR FREE PASS FOR</p>
-        <p class="text-bold-white center">BOSTON FIESTA 2022</p>
+    <div class="index-center-div">
+        <p class="text-bold-white center">WELCOME TO BOSTON FIESTA 2022</p>
 
-        <form class="form" autocomplete="off" method="POST">
-            {% csrf_token %}
-            <div class="input-container">
-                <i class="fa fa-user icon"></i>
-                <input class="input-field" autocomplete="off" type="text" placeholder="Full Name" name="full_name" required/>
-            </div>
-            
-            <div class="input-container">
-                <i class="fa fa-envelope icon"></i>
-                <input class="input-field" autocomplete="off" type="email" placeholder="College Email Id" name="email" required/>
-            </div>
-            
-            <button type="submit" class="btn">Find My Ticket <i class="fa fa-arrow-right" style="margin-left: 10px"></i></button>
-
-            {% comment %} <p class="text-white center"><a href="/login">Already have a ticket! <span class="a-link">Login</span></a></p> {% endcomment %}
-            {% comment %} <p class="text-white-sm center"><a href="/"><i class="fa fa-arrow-left" style="margin-left: 10px"></i> Back to home</a></p> {% endcomment %}
-        </form>
+        <div class="center-div-flex">
+            <a href="/boston">
+                <div class="border-box">
+                    <center><img src="{% static 'core/images/boston_logo.jpg' %}" alt="Boston Students" width="120px" height="120px" style="border-radius: 10px"/></center>
+                    <p class="text-white center">Boston Students</p>
+                </div>
+            </a>
+            <a href="/upload-information">
+                <div class="border-box">
+                    <center><img src="{% static 'core/images/outside_college.jpg' %}" alt="Outside Students" width="120px" height="120px" style="border-radius: 10px"/></center>
+                    <p class="text-white center">Outside Students</p>
+                </div>
+            </a>
+        </div>
     </div>
     
 {% endblock content %}

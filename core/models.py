@@ -106,8 +106,35 @@ class Student(models.Model):
             return mark_safe('<img src="%s%s" width="50" height="50" />' % (f'{settings.MEDIA_URL}', self.image))
 
 
+class OutsideStudent(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=100)
+    study = models.CharField(max_length=100)
+    college = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="students/")
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+
+    class Meta:
+        verbose_name_plural = "Outside Students"
+
+    def full_name(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+        
+    def student_email(self):
+        return self.user.email
+    
+    def image_tag(self):
+        if self.image != '':
+            return mark_safe('<img src="%s%s" width="50" height="50" />' % (f'{settings.MEDIA_URL}', self.image))
+
+
 class Ticket(models.Model):
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True)
+    outside_student = models.ForeignKey(OutsideStudent, on_delete=models.SET_NULL, null=True, blank=True)
     ticket_id = models.CharField(max_length=100)
     checked_in = models.BooleanField(default=False)
     checked_in_date = models.DateTimeField(null=True, blank=True)
