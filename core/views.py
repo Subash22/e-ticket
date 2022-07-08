@@ -1,3 +1,5 @@
+import csv
+import os
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View
@@ -17,9 +19,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.db import transaction
+from PIL import Image, ImageDraw, ImageFont
+from django.conf import settings
 
 
 UserModel = get_user_model()
+
 
 # Create your views here.
 class HomeView(View):
@@ -309,24 +314,39 @@ class GenerateTicketView(View):
                         'created_at': ticket.created_at,
                         'ticket_id': ticket.ticket_id
                     }
-                    factory = qrcode.image.svg.SvgImage
-                    img = qrcode.make(ticket.ticket_id, image_factory=factory, box_size=10)
-                    stream = BytesIO()
-                    img.save(stream)
-                    context["svg"] = stream.getvalue().decode()
+                    background = Image.open('core/static/core/images/ticket.png')
+                    img = qrcode.make(ticket.ticket_id, box_size=10)
+                    img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                    foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                    foreground = foreground.resize((290, 290))
+
+                    img = Image.new('RGB', (1192, 483), (250,250,250))
+                    img.paste(background,(0,0))
+                    img.paste(foreground,(30,70))
+                    img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+
+                    context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
                     return render(self.request, "core/save_ticket.html", context)
                 elif Ticket.objects.filter(outside_student__user=self.request.user).first():
+                    ticket = Ticket.objects.filter(outside_student__user=self.request.user).first()
                     context = {
                         'name': ticket.outside_student.full_name,
                         'email': ticket.outside_student.student_email,
                         'created_at': ticket.created_at,
                         'ticket_id': ticket.ticket_id
                     }
-                    factory = qrcode.image.svg.SvgImage
-                    img = qrcode.make(ticket.ticket_id, image_factory=factory, box_size=10)
-                    stream = BytesIO()
-                    img.save(stream)
-                    context["svg"] = stream.getvalue().decode()
+                    background = Image.open('core/static/core/images/ticket.png')
+                    img = qrcode.make(ticket.ticket_id, box_size=10)
+                    img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                    foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                    foreground = foreground.resize((290, 290))
+
+                    img = Image.new('RGB', (1192, 483), (250,250,250))
+                    img.paste(background,(0,0))
+                    img.paste(foreground,(30,70))
+                    img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+
+                    context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
                     return render(self.request, "core/save_ticket.html", context)
                 else:
                     student = Student.objects.filter(user=self.request.user).first()
@@ -341,11 +361,18 @@ class GenerateTicketView(View):
                             'created_at': ticket.created_at,
                             'ticket_id': ticket.ticket_id
                         }
-                        factory = qrcode.image.svg.SvgImage
-                        img = qrcode.make(ticket.ticket_id, image_factory=factory, box_size=10)
-                        stream = BytesIO()
-                        img.save(stream)
-                        context["svg"] = stream.getvalue().decode()
+                        background = Image.open('core/static/core/images/ticket.png')
+                        img = qrcode.make(ticket.ticket_id, box_size=10)
+                        img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                        foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                        foreground = foreground.resize((290, 290))
+
+                        img = Image.new('RGB', (1192, 483), (250,250,250))
+                        img.paste(background,(0,0))
+                        img.paste(foreground,(30,70))
+                        img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+
+                        context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
                         return render(self.request, "core/save_ticket.html", context)
                     elif OutsideStudent.objects.filter(user=self.request.user).first():
                         outside_student = OutsideStudent.objects.filter(user=self.request.user).first()
@@ -360,22 +387,54 @@ class GenerateTicketView(View):
                             'created_at': ticket.created_at,
                             'ticket_id': ticket.ticket_id
                         }
-                        factory = qrcode.image.svg.SvgImage
-                        img = qrcode.make(ticket.ticket_id, image_factory=factory, box_size=10)
-                        stream = BytesIO()
-                        img.save(stream)
-                        context["svg"] = stream.getvalue().decode()
+                        background = Image.open('core/static/core/images/ticket.png')
+                        img = qrcode.make(ticket.ticket_id, box_size=10)
+                        img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                        foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                        foreground = foreground.resize((290, 290))
+
+                        img = Image.new('RGB', (1192, 483), (250,250,250))
+                        img.paste(background,(0,0))
+                        img.paste(foreground,(30,70))
+                        img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+
+                        context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
                         return render(self.request, "core/save_ticket.html", context)
                     messages.error(self.request, "Student doesn't exists.")
                     return redirect("home")
             else:
                 messages.error(self.request, "Login to continue.")
                 return redirect("login")
-        except:
+        except Exception as e:
+            print(e)
             messages.error(self.request, "Something went wrong.")
             return redirect("home")
 
 
+
+def decode_utf8(line_iterator):
+    for line in line_iterator:
+        yield line.decode('utf-8')
+
+
+def create_upload(request):
+    if request.method == 'POST':
+        # Get the correct type string instead of byte without reading full file into memory with a generator to decode line by line
+        products_file = csv.reader(decode_utf8(request.FILES['file']))
+        next(products_file)  # Skip header row
+
+        for counter, line in enumerate(products_file):
+            full_name = line[0]
+            email = line[2]
+
+            bs = BostonStudent()
+            bs.full_name = full_name
+            bs.email = email
+            bs.save()
+
+        messages.success(request, 'Saved successfully!')
+
+        return redirect('home')
 
 
 

@@ -3,18 +3,15 @@
     <p class="text-bold-black center white-bg">Save your ticket</p>
     <div class="center-div">
 
-        <form action="#" class="form">
-            <div class="blank-container-white">
-                <div id="ticket" class="{% if name == '' %}display-none{% endif %}">
-                    Ticket for Boston Festa<br/>
-                    {{name}}
-                    {{email}}
-                    <span>{{ svg|safe }}</span>
-                </div>
+        <div class="blank-container-white">
+            <div id="ticket" class="{% if name == '' %}display-none{% endif %}">
+                <img src={% static ticket %} alt="Boston Festa Ticket" class="img-ticket" />
             </div>
-            
-            <button type="submit" class="btn">Download Ticket <i class="fa fa-arrow-down" style="margin-left: 10px"></i></button>
-        </form>
+        </div>
+        
+        <div style="width: 100%;">
+            <button class="btn"><a href={% static ticket %} download class="btn">Download Ticket <i class="fa fa-arrow-down" style="margin-left: 10px"></i></a></button>
+        </div>
         
         <p class="text-gray center">Note: Ticket is compulsory at event venue.</p>
         <p class="text-white-sm center"><a href="/"><i class="fa fa-arrow-left" style="margin-left: 10px"></i> Back to home</a></p>

@@ -141,7 +141,7 @@ TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Django Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
