@@ -5,12 +5,12 @@
 
         <div class="blank-container-white">
             <div id="ticket" class="{% if name == '' %}display-none{% endif %}">
-                <img src={% static ticket %} alt="Boston Festa Ticket" class="img-ticket" />
+                <img src={{ticket}} alt="Boston Festa Ticket" class="img-ticket" />
             </div>
         </div>
         
         <div style="width: 100%;">
-            <button class="btn"><a href={% static ticket %} download class="btn">Download Ticket <i class="fa fa-arrow-down" style="margin-left: 10px"></i></a></button>
+            <button class="btn"><a href={{ticket}} download class="btn">Download Ticket <i class="fa fa-arrow-down" style="margin-left: 10px"></i></a></button>
         </div>
         
         <p class="text-gray center">Note: Ticket is compulsory at event venue.</p>

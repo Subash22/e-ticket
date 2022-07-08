@@ -316,16 +316,16 @@ class GenerateTicketView(View):
                     }
                     background = Image.open('core/static/core/images/ticket.png')
                     img = qrcode.make(ticket.ticket_id, box_size=10)
-                    img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
-                    foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                    img.save('media/qr/'+ticket.ticket_id+'_qr.png')
+                    foreground = Image.open('media/qr/'+ticket.ticket_id+'_qr.png')
                     foreground = foreground.resize((290, 290))
 
                     img = Image.new('RGB', (1192, 483), (250,250,250))
                     img.paste(background,(0,0))
                     img.paste(foreground,(30,70))
-                    img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+                    img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
-                    context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
+                    context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
                     return render(self.request, "core/save_ticket.html", context)
                 elif Ticket.objects.filter(outside_student__user=self.request.user).first():
                     ticket = Ticket.objects.filter(outside_student__user=self.request.user).first()
@@ -337,16 +337,16 @@ class GenerateTicketView(View):
                     }
                     background = Image.open('core/static/core/images/ticket.png')
                     img = qrcode.make(ticket.ticket_id, box_size=10)
-                    img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
-                    foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                    img.save('media/qr/'+ticket.ticket_id+'_qr.png')
+                    foreground = Image.open('media/qr/'+ticket.ticket_id+'_qr.png')
                     foreground = foreground.resize((290, 290))
 
                     img = Image.new('RGB', (1192, 483), (250,250,250))
                     img.paste(background,(0,0))
                     img.paste(foreground,(30,70))
-                    img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+                    img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
-                    context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
+                    context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
                     return render(self.request, "core/save_ticket.html", context)
                 else:
                     student = Student.objects.filter(user=self.request.user).first()
@@ -363,16 +363,16 @@ class GenerateTicketView(View):
                         }
                         background = Image.open('core/static/core/images/ticket.png')
                         img = qrcode.make(ticket.ticket_id, box_size=10)
-                        img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
-                        foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                        img.save('media/qr/'+ticket.ticket_id+'_qr.png')
+                        foreground = Image.open('media/qr/'+ticket.ticket_id+'_qr.png')
                         foreground = foreground.resize((290, 290))
 
                         img = Image.new('RGB', (1192, 483), (250,250,250))
                         img.paste(background,(0,0))
                         img.paste(foreground,(30,70))
-                        img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+                        img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
-                        context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
+                        context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
                         return render(self.request, "core/save_ticket.html", context)
                     elif OutsideStudent.objects.filter(user=self.request.user).first():
                         outside_student = OutsideStudent.objects.filter(user=self.request.user).first()
@@ -389,16 +389,16 @@ class GenerateTicketView(View):
                         }
                         background = Image.open('core/static/core/images/ticket.png')
                         img = qrcode.make(ticket.ticket_id, box_size=10)
-                        img.save('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
-                        foreground = Image.open('core/static/core/qr/'+ticket.ticket_id+'_qr.png')
+                        img.save('media/qr/'+ticket.ticket_id+'_qr.png')
+                        foreground = Image.open('media/qr/'+ticket.ticket_id+'_qr.png')
                         foreground = foreground.resize((290, 290))
 
                         img = Image.new('RGB', (1192, 483), (250,250,250))
                         img.paste(background,(0,0))
                         img.paste(foreground,(30,70))
-                        img.save('core/static/core/tickets/'+ticket.ticket_id+'_ticket.png')
+                        img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
-                        context["ticket"] = 'core/tickets/'+ticket.ticket_id+'_ticket.png'
+                        context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
                         return render(self.request, "core/save_ticket.html", context)
                     messages.error(self.request, "Student doesn't exists.")
                     return redirect("home")
