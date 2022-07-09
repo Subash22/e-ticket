@@ -21,6 +21,7 @@ from django.contrib.auth import login, authenticate
 from django.db import transaction
 from PIL import Image, ImageDraw, ImageFont
 from django.conf import settings
+from django.core.mail import EmailMessage
 
 
 UserModel = get_user_model()
@@ -314,18 +315,9 @@ class GenerateTicketView(View):
                         'created_at': ticket.created_at,
                         'ticket_id': ticket.ticket_id
                     }
-                    background = Image.open('core/static/core/images/ticket.png')
-                    img = qrcode.make(ticket.ticket_id, box_size=10)
-                    img.save('media/qr/'+ticket.ticket_id+'_qr.png')
-                    foreground = Image.open('media/qr/'+ticket.ticket_id+'_qr.png')
-                    foreground = foreground.resize((290, 290))
-
-                    img = Image.new('RGB', (1192, 483), (250,250,250))
-                    img.paste(background,(0,0))
-                    img.paste(foreground,(30,70))
-                    img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
                     context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
+                    send_generated_ticket(self.request, self.request.user, ticket.student, context["ticket"])
                     return render(self.request, "core/save_ticket.html", context)
                 elif Ticket.objects.filter(outside_student__user=self.request.user).first():
                     ticket = Ticket.objects.filter(outside_student__user=self.request.user).first()
@@ -335,18 +327,9 @@ class GenerateTicketView(View):
                         'created_at': ticket.created_at,
                         'ticket_id': ticket.ticket_id
                     }
-                    background = Image.open('core/static/core/images/ticket.png')
-                    img = qrcode.make(ticket.ticket_id, box_size=10)
-                    img.save('media/qr/'+ticket.ticket_id+'_qr.png')
-                    foreground = Image.open('media/qr/'+ticket.ticket_id+'_qr.png')
-                    foreground = foreground.resize((290, 290))
-
-                    img = Image.new('RGB', (1192, 483), (250,250,250))
-                    img.paste(background,(0,0))
-                    img.paste(foreground,(30,70))
-                    img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
                     context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
+                    send_generated_ticket(self.request, self.request.user, ticket.outside_student, context["ticket"])
                     return render(self.request, "core/save_ticket.html", context)
                 else:
                     student = Student.objects.filter(user=self.request.user).first()
@@ -373,6 +356,7 @@ class GenerateTicketView(View):
                         img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
                         context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
+                        send_generated_ticket(self.request, self.request.user, student, context["ticket"])
                         return render(self.request, "core/save_ticket.html", context)
                     elif OutsideStudent.objects.filter(user=self.request.user).first():
                         outside_student = OutsideStudent.objects.filter(user=self.request.user).first()
@@ -399,6 +383,7 @@ class GenerateTicketView(View):
                         img.save('media/tickets/'+ticket.ticket_id+'_ticket.png')
 
                         context["ticket"] = 'media/tickets/'+ticket.ticket_id+'_ticket.png'
+                        send_generated_ticket(self.request, self.request.user, outside_student, context["ticket"])
                         return render(self.request, "core/save_ticket.html", context)
                     messages.error(self.request, "Student doesn't exists.")
                     return redirect("home")
@@ -409,6 +394,27 @@ class GenerateTicketView(View):
             print(e)
             messages.error(self.request, "Something went wrong.")
             return redirect("home")
+
+def send_generated_ticket(request, user, student, ticket):
+    current_site = get_current_site(request)
+    subject = "Ticket - Boston Festa"
+    email_template_name = "core/ticket_generated.txt"
+    c = {
+        "email": user.email,
+        'domain': current_site,
+        'site_name': 'Interface',
+        "full_name": student.full_name,
+        'protocol': 'http',
+    }
+    email = render_to_string(email_template_name, c)
+    message = EmailMessage(
+        subject,
+        email,
+        settings.EMAIL_HOST_USER,
+        [user.email],
+    )
+    message.attach_file(ticket)
+    message.send(fail_silently=False)
 
 
 

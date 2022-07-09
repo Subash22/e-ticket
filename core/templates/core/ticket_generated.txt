@@ -1,0 +1,12 @@
+{% autoescape off %}
+
+Hi {{ full_name }},
+
+You can download your ticket for Boston Festa 2022,
+
+Note: Ticket is compulsory at event venue..
+
+Sincerely,
+Boston Festa Team
+
+{% endautoescape %}
